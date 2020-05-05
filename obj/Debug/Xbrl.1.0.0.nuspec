@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Xbrl</id>
+    <version>1.0.0</version>
+    <authors>Tim Hanewich</authors>
+    <owners>Tim Hanewich</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <icon>XBRL Logo.png</icon>
+    <description>Package Description</description>
+    <tags>xbrl</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\TaHan\Documents\GitHub\Xbrl\bin\Debug\netstandard2.0\Xbrl.dll" target="lib\netstandard2.0\Xbrl.dll" />
+    <file src="C:\Users\TaHan\Downloads\XBRL Logo.png" target="XBRL Logo.png" />
+  </files>
+</package>

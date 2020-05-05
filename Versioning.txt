@@ -1,0 +1,1 @@
+v1 - May 5, 2020.  Ported over from TimHanewichNetStandardToolkit.  Split it up into multiple files, not just one big one.
