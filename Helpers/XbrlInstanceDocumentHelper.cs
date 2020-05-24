@@ -5,13 +5,9 @@ namespace Xbrl.Helpers
 {
     public static class XbrlInstanceDocumentHelper
     {
-        public static XbrlFact GetValueFromPriorities(this XbrlInstanceDocument doc, string priorities)
+        public static XbrlFact GetValueFromPriorities(this XbrlInstanceDocument doc, params string[] priorities)
             {
-                List<string> Splitter = new List<string>();
-                Splitter.Add(",");
-                string[] prioritiy_words = priorities.Split(Splitter.ToArray(), StringSplitOptions.None);
-
-                foreach (string word in prioritiy_words)
+                foreach (string word in priorities)
                 {
                     foreach (XbrlFact fact in doc.Facts)
                     {
