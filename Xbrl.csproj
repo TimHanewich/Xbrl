@@ -5,12 +5,16 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>2.0.0</Version>
     <Authors>Tim Hanewich</Authors>
-    <PackageIcon>XBRL Logo.png</PackageIcon>
+    <PackageIcon>XbrlLogo.jpeg</PackageIcon>
     <PackageTags>xbrl</PackageTags>
+    <RepositoryUrl>https://github.com/TimHanewich/Xbrl</RepositoryUrl>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+    <Description>Library for reading XBRL (Extensible Business Reporting Language) instance documents</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\Downloads\XBRL Logo.png">
+    <None Include="XbrlLogo.jpeg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

@@ -1,8 +1,9 @@
-C:\Users\TaHan\Documents\GitHub\Xbrl\bin\Debug\netstandard2.0\Xbrl.deps.json
-C:\Users\TaHan\Documents\GitHub\Xbrl\bin\Debug\netstandard2.0\Xbrl.dll
-C:\Users\TaHan\Documents\GitHub\Xbrl\bin\Debug\netstandard2.0\Xbrl.pdb
-C:\Users\TaHan\Documents\GitHub\Xbrl\obj\Debug\netstandard2.0\Xbrl.csproj.CoreCompileInputs.cache
-C:\Users\TaHan\Documents\GitHub\Xbrl\obj\Debug\netstandard2.0\Xbrl.AssemblyInfoInputs.cache
-C:\Users\TaHan\Documents\GitHub\Xbrl\obj\Debug\netstandard2.0\Xbrl.AssemblyInfo.cs
-C:\Users\TaHan\Documents\GitHub\Xbrl\obj\Debug\netstandard2.0\Xbrl.dll
-C:\Users\TaHan\Documents\GitHub\Xbrl\obj\Debug\netstandard2.0\Xbrl.pdb
+C:\Users\TaHan\Downloads\Xbrl\bin\Debug\netstandard2.0\Xbrl.deps.json
+C:\Users\TaHan\Downloads\Xbrl\bin\Debug\netstandard2.0\Xbrl.dll
+C:\Users\TaHan\Downloads\Xbrl\bin\Debug\netstandard2.0\Xbrl.pdb
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.csprojAssemblyReference.cache
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.csproj.CoreCompileInputs.cache
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.AssemblyInfoInputs.cache
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.AssemblyInfo.cs
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.dll
+C:\Users\TaHan\Downloads\Xbrl\obj\Debug\netstandard2.0\Xbrl.pdb

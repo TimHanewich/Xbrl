@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\Xbrl.csproj": {}
+    "C:\\Users\\TaHan\\Downloads\\Xbrl\\Xbrl.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\Xbrl.csproj": {
-      "version": "1.0.0",
+    "C:\\Users\\TaHan\\Downloads\\Xbrl\\Xbrl.csproj": {
+      "version": "2.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\Xbrl.csproj",
+        "projectUniqueName": "C:\\Users\\TaHan\\Downloads\\Xbrl\\Xbrl.csproj",
         "projectName": "Xbrl",
-        "projectPath": "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\Xbrl.csproj",
+        "projectPath": "C:\\Users\\TaHan\\Downloads\\Xbrl\\Xbrl.csproj",
         "packagesPath": "C:\\Users\\TaHan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\obj\\",
+        "outputPath": "C:\\Users\\TaHan\\Downloads\\Xbrl\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\TaHan\\AppData\\Roaming\\NuGet\\NuGet.Config",

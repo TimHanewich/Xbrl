@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vsQXAv7lTD3bKaSpX+xSfcGY7vhMJVYRh3omf2wkuu8SnrYmT3YyIMgJlnRBgvrhma81YnPHi6L9rNOaA8MbZg==",
+  "dgSpecHash": "wEXKhNKu2GauDXAtBNyq15UP7KALN5WQrz105epyB1jBsvp/19u7CnOX6pR+YbmiQG0yb27UZZBcjPXCuUwmzQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\TaHan\\Documents\\GitHub\\Xbrl\\Xbrl.csproj",
+  "projectFilePath": "C:\\Users\\TaHan\\Downloads\\Xbrl\\Xbrl.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TaHan\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\TaHan\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
