@@ -67,10 +67,10 @@ Import the helper class by placing this at the top of your code file:
 ~~~
 using Xbrl.Helpers;
 ~~~
-This will add an extension method to an `XbrlInstanceDocument` object called `GetValueFromPriorities`. This method will look for facts that are only relevent to the documents current time period. You can provide multiple labels (separated by comma) to search for and the method will search for a label with the first label, move onto the next if it was unable to find one, and so forth.  
+This will add an extension method to an `XbrlInstanceDocument` object called `GetValueFromPriorities`. This method will look for facts that are only relevent to the documents current time period. You can provide multiple labels to search for and the method will search for a fact with the first label, move onto the next if it was unable to find one, and so forth.  
 For example, if a company either labeled their Current Assets from their balance sheet as "AssetsCurrent" or "CurrentAssets", we would use the following code to return this fact.
 ~~~
-XbrlFact current_assets = doc.GetValueFromPriorities("CurrentAssets,AssetsCurrent");
+XbrlFact current_assets = doc.GetValueFromPriorities("CurrentAssets", "AssetsCurrent");
 ~~~
 
 ### Converting an Instance Document to a Common Financial Statement
