@@ -154,6 +154,37 @@ namespace Xbrl.FinancialStatement
                 ToReturn.RetainedEarnings = null;
             }
 
+
+            //Operating Cash Flows
+            try
+            {
+                ToReturn.OperatingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInOperatingActivities").Value;
+            }
+            catch
+            {
+                ToReturn.OperatingCashFlows = null;
+            }
+
+            //Investing Cash Flows
+            try
+            {
+                ToReturn.InvestingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInInvestingActivities").Value;
+            }
+            catch
+            {
+                ToReturn.InvestingCashFlows = null;
+            }
+
+            //Finance cash flows
+            try
+            {
+                ToReturn.FinancingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInFinancingActivities").Value;
+            }
+            catch
+            {
+                ToReturn.FinancingCashFlows = null;
+            }
+
             return ToReturn;
         }
     }

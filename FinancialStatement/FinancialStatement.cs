@@ -22,6 +22,11 @@ namespace Xbrl.FinancialStatement
             public float? RetainedEarnings { get; set; }
             public DateTime FinancialStatementGeneratedAtUtc { get; set; }
 
+            //Cash Flow Statement Items
+            public float? OperatingCashFlows {get; set;}
+            public float? InvestingCashFlows {get; set;}
+            public float? FinancingCashFlows {get; set;}
+
             public FinancialStatement()
             {
                 Header = new FinancialStatementHeader();
