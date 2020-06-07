@@ -158,7 +158,7 @@ namespace Xbrl.FinancialStatement
             //Operating Cash Flows
             try
             {
-                ToReturn.OperatingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInOperatingActivities").Value;
+                ToReturn.OperatingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations").Value;
             }
             catch
             {
@@ -168,7 +168,7 @@ namespace Xbrl.FinancialStatement
             //Investing Cash Flows
             try
             {
-                ToReturn.InvestingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInInvestingActivities").Value;
+                ToReturn.InvestingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations").Value;
             }
             catch
             {
@@ -178,7 +178,7 @@ namespace Xbrl.FinancialStatement
             //Finance cash flows
             try
             {
-                ToReturn.FinancingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInFinancingActivities").Value;
+                ToReturn.FinancingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInFinancingActivities", "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations").Value;
             }
             catch
             {
