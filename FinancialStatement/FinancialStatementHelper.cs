@@ -45,7 +45,7 @@ namespace Xbrl.FinancialStatement
             //Revenue
             try
             {
-                ToReturn.Revenue = doc.GetValueFromPriorities("Revenue", "Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax", "RevenueFromContractWithCustomerBeforeReimbursementsExcludingAssessedTax").Value;
+                ToReturn.Revenue = doc.GetValueFromPriorities("Revenue", "Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax", "RevenueFromContractWithCustomerBeforeReimbursementsExcludingAssessedTax", "SalesRevenueNet").Value;
             }
             catch
             {
