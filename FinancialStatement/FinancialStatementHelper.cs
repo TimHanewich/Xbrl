@@ -28,7 +28,7 @@ namespace Xbrl.FinancialStatement
             }
 
             //Symbol (header)
-            ToReturn.Header.Symbol = doc.TradingSymbol;
+            ToReturn.Header.Symbol = doc.TradingSymbol.Trim().ToLower();
 
             //Period start
             try
