@@ -15,12 +15,12 @@ namespace Xbrl
         public string PrimaryInstantContextId { get; set; }
 
         //Risks
-        public bool PrimaryPeriodContextIdAccuracyRiskFlag {get; set;}
+        public bool PrimaryPeriodContextIdInaccuracyRiskFlag {get; set;}
 
         public static XbrlInstanceDocument Create(Stream s)
         {
             XbrlInstanceDocument ToReturn = new XbrlInstanceDocument();
-            ToReturn.PrimaryPeriodContextIdAccuracyRiskFlag = false;
+            ToReturn.PrimaryPeriodContextIdInaccuracyRiskFlag = false;
 
             StreamReader sr = new StreamReader(s);
             int loc1 = 0;
@@ -304,7 +304,7 @@ namespace Xbrl
                             {
                                 
                                 //Raise the flag
-                                ToReturn.PrimaryPeriodContextIdAccuracyRiskFlag = true;
+                                ToReturn.PrimaryPeriodContextIdInaccuracyRiskFlag = true;
 
                                 //The below code was going to try and find the "correct" context reference.  I disabled it because it didn't work! At least for the Microsoft Q3 FY2020 XBRL document it didn't work.
                                 
