@@ -4,9 +4,11 @@ namespace Xbrl.FinancialStatement
 {
     public class FinancialStatement
         {
+            //General data
             public FinancialStatementHeader Header { get; set; }
             public DateTime PeriodStart { get; set; }
             public DateTime PeriodEnd { get; set; }
+            public bool InaccuracyRiskFlag {get; set;}
 
             //Income Statement Items
             public float? Revenue { get; set; }
@@ -30,6 +32,7 @@ namespace Xbrl.FinancialStatement
             public FinancialStatement()
             {
                 Header = new FinancialStatementHeader();
+                InaccuracyRiskFlag = false;
             }
         }
 }

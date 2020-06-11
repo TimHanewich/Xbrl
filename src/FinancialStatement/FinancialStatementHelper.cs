@@ -30,6 +30,14 @@ namespace Xbrl.FinancialStatement
             //Symbol (header)
             ToReturn.Header.Symbol = doc.TradingSymbol.Trim().ToLower();
 
+
+            //Inaccuracy Flag
+            if (doc.PrimaryPeriodContextIdInaccuracyRiskFlag == true)
+            {
+                ToReturn.InaccuracyRiskFlag = true;
+            }
+
+
             //Period start
             try
             {
