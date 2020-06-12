@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.6.1</Version>
+    <Version>2.6.2</Version>
     <Authors>Tim Hanewich</Authors>
     <PackageIcon>XbrlLogo.jpeg</PackageIcon>
     <PackageTags>xbrl</PackageTags>
