@@ -28,7 +28,14 @@ namespace Xbrl.FinancialStatement
             }
 
             //Symbol (header)
-            ToReturn.Header.Symbol = doc.TradingSymbol.Trim().ToLower();
+            if (doc.TradingSymbol != null)
+            {
+                if (doc.TradingSymbol != "")
+                {
+                    ToReturn.Header.Symbol = doc.TradingSymbol.Trim().ToLower();
+                }
+            }
+            
 
 
             //Inaccuracy Flag
