@@ -376,42 +376,50 @@ namespace Xbrl
             //Wrap back around and try to find the primary instant ref
             if (ToReturn.PrimaryPeriodContextId != "")
             {
-                XbrlContext PrimaryPeriodContext = ToReturn.GetContextById(ToReturn.PrimaryPeriodContextId);
-                string doc_end_date = PrimaryPeriodContext.EndDate.Month.ToString() + "-" + PrimaryPeriodContext.EndDate.Day.ToString() + "-" + PrimaryPeriodContext.EndDate.Year.ToString();
-                List<XbrlContext> EligibileInstantContexts = new List<XbrlContext>();
-                foreach (XbrlContext con in ToReturn.Contexts)
+                try
                 {
-                    if (con.TimeType == XbrlTimeType.Instant)
+                    XbrlContext PrimaryPeriodContext = ToReturn.GetContextById(ToReturn.PrimaryPeriodContextId);
+                    string doc_end_date = PrimaryPeriodContext.EndDate.Month.ToString() + "-" + PrimaryPeriodContext.EndDate.Day.ToString() + "-" + PrimaryPeriodContext.EndDate.Year.ToString();
+                    List<XbrlContext> EligibileInstantContexts = new List<XbrlContext>();
+                    foreach (XbrlContext con in ToReturn.Contexts)
                     {
-                        string this_con_date = con.InstantDate.Month.ToString() + "-" + con.InstantDate.Day.ToString() + "-" + con.InstantDate.Year.ToString();
-                        if (doc_end_date == this_con_date)
+                        if (con.TimeType == XbrlTimeType.Instant)
                         {
-                            EligibileInstantContexts.Add(con);
+                            string this_con_date = con.InstantDate.Month.ToString() + "-" + con.InstantDate.Day.ToString() + "-" + con.InstantDate.Year.ToString();
+                            if (doc_end_date == this_con_date)
+                            {
+                                EligibileInstantContexts.Add(con);
+                            }
                         }
                     }
-                }
-                if (EligibileInstantContexts.Count == 1)
-                {
-                    ToReturn.PrimaryInstantContextId = EligibileInstantContexts[0].Id;
-                }
-                else if (EligibileInstantContexts.Count > 1)
-                {
-                    XbrlContext WinningContext = null;
-                    int WinningCount = -1;
-                    foreach (XbrlContext con in EligibileInstantContexts)
+                    if (EligibileInstantContexts.Count == 1)
                     {
-                        int thiscount = con.GetRelevantFacts(ToReturn.Facts).Length;
-                        if (thiscount > WinningCount)
-                        {
-                            WinningCount = thiscount;
-                            WinningContext = con;
-                        }
+                        ToReturn.PrimaryInstantContextId = EligibileInstantContexts[0].Id;
                     }
-                    ToReturn.PrimaryInstantContextId = WinningContext.Id;
+                    else if (EligibileInstantContexts.Count > 1)
+                    {
+                        XbrlContext WinningContext = null;
+                        int WinningCount = -1;
+                        foreach (XbrlContext con in EligibileInstantContexts)
+                        {
+                            int thiscount = con.GetRelevantFacts(ToReturn.Facts).Length;
+                            if (thiscount > WinningCount)
+                            {
+                                WinningCount = thiscount;
+                                WinningContext = con;
+                            }
+                        }
+                        ToReturn.PrimaryInstantContextId = WinningContext.Id;
+                    }
+            
                 }
+                catch
+                {
+                    ToReturn.PrimaryInstantContextId = "";
+                }
+                
             }
             #endregion
-
 
 
 
