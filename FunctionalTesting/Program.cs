@@ -10,7 +10,7 @@ namespace FunctionalTesting
     {
         static void Main(string[] args)
         {
-            string path = "C:\\Users\\tihanewi\\Downloads\\hd-20100131.xml";
+            string path = "C:\\Users\\tihanewi\\Downloads\\amd-20101225.xml";
             Stream s = System.IO.File.OpenRead(path);
             XbrlInstanceDocument doc = XbrlInstanceDocument.Create(s);
             Console.WriteLine("Period context ref: '" + doc.PrimaryPeriodContextId + "'");
