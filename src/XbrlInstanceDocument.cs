@@ -99,7 +99,7 @@ namespace Xbrl
                 string line = sr.ReadLine().Trim();
 
 
-                if (line.Contains("<") && line.Contains(":") && line.Contains("<context") == false && line.Contains("<xbrli:context") == false && line.Contains("DocumentType") == false && line.Contains("<dei:TradingSymbol") == false)
+                if (line.Contains("<") && line.Contains(":") && line.Contains("<context") == false && line.Contains("<xbrli:context") == false && line.Contains("DocumentType") == false && line.Contains("<dei:TradingSymbol") == false && line.Contains("<!--") == false)
                 {
 
 
@@ -207,6 +207,8 @@ namespace Xbrl
             } while (sr.EndOfStream == false);
             ToReturn.Facts = Facts.ToArray();
             #endregion
+
+            
 
             #region "Get Trading Symbol"
             bool TradingSymbolAlreadySet = false; //This is here
