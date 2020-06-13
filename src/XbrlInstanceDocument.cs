@@ -271,7 +271,7 @@ namespace Xbrl
             {
                 string line = sr.ReadLine();
 
-                if (line.Contains("<dei:DocumentFiscalPeriodFocus"))
+                if (line.Contains("<dei:DocumentFiscalPeriodFocus") || line.Contains("<dei:CurrentFiscalYearEndDate"))
                 {
                     string focus = line;
                     do
