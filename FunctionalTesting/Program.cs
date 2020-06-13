@@ -11,7 +11,7 @@ namespace FunctionalTesting
     {
         static void Main(string[] args)
         {
-            TestSingleDocument();
+            TestAll10Ks();
         }
 
         static void TestSingleDocument()
