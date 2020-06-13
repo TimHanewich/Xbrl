@@ -183,7 +183,19 @@ namespace Xbrl
                         {
                             loc1 = FactData.IndexOf(">");
                             loc2 = FactData.IndexOf("<", loc1 + 1);
-                            fact.Value = Convert.ToSingle(FactData.Substring(loc1 + 1, loc2 - loc1 - 1));
+                            string valstr = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                            if (valstr != "")
+                            {
+                                //This try bracket is in here because some XBRL files have more than just values in them (this is an error)... for example, XOM's 2017 filing
+                                try
+                                {
+                                    fact.Value = Convert.ToSingle(valstr);
+                                }
+                                catch
+                                {
+                                    fact.Value = 0;
+                                }
+                            }                            
                         }
 
 
