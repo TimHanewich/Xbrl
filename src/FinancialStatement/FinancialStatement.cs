@@ -5,10 +5,10 @@ namespace Xbrl.FinancialStatement
     public class FinancialStatement
         {
             //General data
-            public FinancialStatementHeader Header { get; set; }
-            public DateTime PeriodStart { get; set; }
-            public DateTime PeriodEnd { get; set; }
+            public DateTime? PeriodStart { get; set; }
+            public DateTime? PeriodEnd { get; set; }
             public bool InaccuracyRiskFlag {get; set;}
+            public DateTime FinancialStatementGeneratedAtUtc { get; set; }
 
             //Income Statement Items
             public float? Revenue { get; set; }
@@ -22,7 +22,7 @@ namespace Xbrl.FinancialStatement
             public float? CurrentAssets { get; set; }
             public float? CurrentLiabilities { get; set; }
             public float? RetainedEarnings { get; set; }
-            public DateTime FinancialStatementGeneratedAtUtc { get; set; }
+            
 
             //Cash Flow Statement Items
             public float? OperatingCashFlows {get; set;}
@@ -31,7 +31,6 @@ namespace Xbrl.FinancialStatement
 
             public FinancialStatement()
             {
-                Header = new FinancialStatementHeader();
                 InaccuracyRiskFlag = false;
             }
         }

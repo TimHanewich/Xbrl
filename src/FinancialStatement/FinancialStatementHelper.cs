@@ -8,34 +8,7 @@ namespace Xbrl.FinancialStatement
         public static FinancialStatement CreateFinancialStatement(this XbrlInstanceDocument doc)
         {
             FinancialStatement ToReturn = new FinancialStatement();
-            ToReturn.FinancialStatementGeneratedAtUtc = DateTime.UtcNow;
-
-            //Document Type (Header)
-            ToReturn.Header.DocumentType = doc.DocumentType;
-
-            //Period End Date (Header)
-            if (doc.PrimaryPeriodContextId != "")
-            {
-                try
-                {
-                    XbrlContext con = doc.GetContextById(doc.PrimaryPeriodContextId);
-                    ToReturn.Header.PeriodEndDate = con.EndDate;
-                }
-                catch
-                {
-                    ToReturn.Header.PeriodEndDate = DateTime.Parse("1/1/1900");
-                }
-            }
-
-            //Symbol (header)
-            if (doc.TradingSymbol != null)
-            {
-                if (doc.TradingSymbol != "")
-                {
-                    ToReturn.Header.Symbol = doc.TradingSymbol.Trim().ToLower();
-                }
-            }
-            
+            ToReturn.FinancialStatementGeneratedAtUtc = DateTime.UtcNow;          
 
 
             //Inaccuracy Flag
