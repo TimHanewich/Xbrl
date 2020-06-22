@@ -22,6 +22,7 @@ namespace Xbrl.FinancialStatement
             public float? CurrentAssets { get; set; }
             public float? CurrentLiabilities { get; set; }
             public float? RetainedEarnings { get; set; }
+            public long? CommonStockSharesOutstanding {get; set;}
             
 
             //Cash Flow Statement Items

@@ -142,6 +142,16 @@ namespace Xbrl.FinancialStatement
                 ToReturn.RetainedEarnings = null;
             }
 
+            //Common Stock Shares Outstanding
+            try
+            {
+                ToReturn.CommonStockSharesOutstanding = Convert.ToInt64(doc.GetValueFromPriorities("CommonStockSharesOutstanding", "EntityCommonStockSharesOutstanding").Value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Crit: " + e.Message);
+                ToReturn.CommonStockSharesOutstanding = null;
+            }
 
             //Operating Cash Flows
             try

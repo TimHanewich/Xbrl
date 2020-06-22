@@ -11,7 +11,11 @@ namespace FunctionalTesting
     {
         static void Main(string[] args)
         {
-            TestSingleDocument();
+            EdgarSearch es = EdgarSearch.CreateAsync(args[0], "10-K").Result;
+            Stream s = es.GetFirstResultOfFilingType("10-K").DownloadXbrlDocumentAsync().Result;
+            XbrlInstanceDocument doc = XbrlInstanceDocument.Create(s);
+            FinancialStatement fs = doc.CreateFinancialStatement();
+            Console.WriteLine(fs.CommonStockSharesOutstanding.Value.ToString());
         }
 
         static void TestSingleDocument()
