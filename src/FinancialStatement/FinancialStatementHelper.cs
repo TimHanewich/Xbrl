@@ -225,6 +225,19 @@ namespace Xbrl.FinancialStatement
                 ToReturn.FinancingCashFlows = null;
             }
 
+            //ProceedsFromIssuanceOfDebt
+            try
+            {
+                ToReturn.ProceedsFromIssuanceOfDebt = doc.GetValueFromPriorities("ProceedsFromIssuanceOfDebt").Value;
+            }
+            catch
+            {
+                ToReturn.ProceedsFromIssuanceOfDebt = null;
+            }
+            
+            
+            
+            
             #endregion
             
             
