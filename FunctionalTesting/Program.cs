@@ -16,14 +16,8 @@ namespace FunctionalTesting
             Stream s = esr.DownloadXbrlDocumentAsync().Result;
             XbrlInstanceDocument doc = XbrlInstanceDocument.Create(s);
             FinancialStatement fs = doc.CreateFinancialStatement();
-            if (fs.ResearchAndDevelopmentExpense.HasValue)
-            {
-                Console.WriteLine(fs.ResearchAndDevelopmentExpense.Value.ToString("#,##0"));
-            }
-            else
-            {
-                Console.WriteLine("NULL!");
-            }
+            string json = JsonConvert.SerializeObject(fs);
+            Console.WriteLine(json);
         }
 
         static void TestSingleDocument()

@@ -228,7 +228,7 @@ namespace Xbrl.FinancialStatement
             //ProceedsFromIssuanceOfDebt
             try
             {
-                ToReturn.ProceedsFromIssuanceOfDebt = doc.GetValueFromPriorities("ProceedsFromIssuanceOfDebt").Value;
+                ToReturn.ProceedsFromIssuanceOfDebt = doc.GetValueFromPriorities("ProceedsFromIssuanceOfDebt", "ProceedsFromDebtMaturingInMoreThanThreeMonths", "ProceedsFromIssuanceOfLongTermDebt", "ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet").Value;
             }
             catch
             {
@@ -238,7 +238,7 @@ namespace Xbrl.FinancialStatement
             //Payments of debt
             try
             {
-                ToReturn.PaymentsOfDebt = doc.GetValueFromPriorities("RepaymentsOfDebt").Value;
+                ToReturn.PaymentsOfDebt = doc.GetValueFromPriorities("RepaymentsOfDebt", "RepaymentsOfDebtMaturingInMoreThanThreeMonths", "RepaymentsOfLongTermDebt", "RepaymentsOfLongTermDebtAndCapitalSecurities").Value;
             }
             catch
             {
