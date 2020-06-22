@@ -12,6 +12,9 @@ namespace Xbrl.FinancialStatement
 
             //Income Statement Items
             public float? Revenue { get; set; }
+            public float? SellingGeneralAndAdministrativeExpense {get; set;}
+            public float? ResearchAndDevelopmentExpense {get; set;}
+            public float? OperatingIncome {get; set;}
             public float? NetIncome { get; set; }
 
             //Balance Sheet Items

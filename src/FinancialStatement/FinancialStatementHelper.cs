@@ -11,6 +11,7 @@ namespace Xbrl.FinancialStatement
             ToReturn.FinancialStatementGeneratedAtUtc = DateTime.UtcNow;          
 
 
+            #region "Contextual (misc) info"
             //Inaccuracy Flag
             if (doc.PrimaryPeriodContextIdInaccuracyRiskFlag == true)
             {
@@ -30,6 +31,19 @@ namespace Xbrl.FinancialStatement
 
             }
 
+            //Common Stock Shares Outstanding
+            try
+            {
+                ToReturn.CommonStockSharesOutstanding = Convert.ToInt64(doc.GetValueFromPriorities("CommonStockSharesOutstanding", "EntityCommonStockSharesOutstanding").Value);
+            }
+            catch
+            {
+                ToReturn.CommonStockSharesOutstanding = null;
+            }
+
+            #endregion
+
+            #region "Income Statement"
             //Revenue
             try
             {
@@ -39,8 +53,6 @@ namespace Xbrl.FinancialStatement
             {
                 ToReturn.Revenue = null;
             }
-
-            
 
             //Net income
             try
@@ -52,6 +64,41 @@ namespace Xbrl.FinancialStatement
                 ToReturn.NetIncome = null;
             }
 
+            //Operating Income
+            try
+            {
+                ToReturn.OperatingIncome = doc.GetValueFromPriorities("OperatingIncomeLoss").Value;
+            }
+            catch
+            {
+                ToReturn.OperatingIncome = null;
+            }
+
+            //Selling general and administrative expense
+            try
+            {
+                ToReturn.SellingGeneralAndAdministrativeExpense = doc.GetValueFromPriorities("SellingGeneralAndAdministrativeExpense").Value;
+            }
+            catch
+            {
+                ToReturn.SellingGeneralAndAdministrativeExpense = null;
+            }
+
+            //Research and development expense
+            try
+            {
+                ToReturn.ResearchAndDevelopmentExpense = doc.GetValueFromPriorities("ResearchAndDevelopmentExpense", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost").Value;
+            }
+            catch
+            {
+                ToReturn.ResearchAndDevelopmentExpense = null;
+            }
+
+
+            #endregion
+         
+            #region "Balance Sheet"
+         
             //Assets
             try
             {
@@ -142,17 +189,12 @@ namespace Xbrl.FinancialStatement
                 ToReturn.RetainedEarnings = null;
             }
 
-            //Common Stock Shares Outstanding
-            try
-            {
-                ToReturn.CommonStockSharesOutstanding = Convert.ToInt64(doc.GetValueFromPriorities("CommonStockSharesOutstanding", "EntityCommonStockSharesOutstanding").Value);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Crit: " + e.Message);
-                ToReturn.CommonStockSharesOutstanding = null;
-            }
+            
 
+#endregion
+            
+            #region "Cash Flows"
+            
             //Operating Cash Flows
             try
             {
@@ -183,6 +225,9 @@ namespace Xbrl.FinancialStatement
                 ToReturn.FinancingCashFlows = null;
             }
 
+            #endregion
+            
+            
             return ToReturn;
         }
     }

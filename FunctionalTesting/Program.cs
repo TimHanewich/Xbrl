@@ -12,10 +12,18 @@ namespace FunctionalTesting
         static void Main(string[] args)
         {
             EdgarSearch es = EdgarSearch.CreateAsync(args[0], "10-K").Result;
-            Stream s = es.GetFirstResultOfFilingType("10-K").DownloadXbrlDocumentAsync().Result;
+            EdgarSearchResult esr = es.GetFirstResultOfFilingType("10-K");
+            Stream s = esr.DownloadXbrlDocumentAsync().Result;
             XbrlInstanceDocument doc = XbrlInstanceDocument.Create(s);
             FinancialStatement fs = doc.CreateFinancialStatement();
-            Console.WriteLine(fs.CommonStockSharesOutstanding.Value.ToString());
+            if (fs.ResearchAndDevelopmentExpense.HasValue)
+            {
+                Console.WriteLine(fs.ResearchAndDevelopmentExpense.Value.ToString("#,##0"));
+            }
+            else
+            {
+                Console.WriteLine("NULL!");
+            }
         }
 
         static void TestSingleDocument()
