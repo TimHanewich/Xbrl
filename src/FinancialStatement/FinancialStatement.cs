@@ -33,6 +33,7 @@ namespace Xbrl.FinancialStatement
             public float? InvestingCashFlows {get; set;}
             public float? FinancingCashFlows {get; set;}
             public float? ProceedsFromIssuanceOfDebt {get; set;}
+            public float? PaymentsOfDebt {get; set;}
 
             public FinancialStatement()
             {

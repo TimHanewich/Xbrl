@@ -235,6 +235,15 @@ namespace Xbrl.FinancialStatement
                 ToReturn.ProceedsFromIssuanceOfDebt = null;
             }
             
+            //Payments of debt
+            try
+            {
+                ToReturn.PaymentsOfDebt = doc.GetValueFromPriorities("RepaymentsOfDebt").Value;
+            }
+            catch
+            {
+                ToReturn.PaymentsOfDebt = null;
+            }
             
             
             
