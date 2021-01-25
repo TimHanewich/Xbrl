@@ -309,6 +309,7 @@ namespace Xbrl.FinancialStatement
             dr_header.Values.Add("Financing Cash Flows");
             dr_header.Values.Add("Proceeds from Issuance of Debt");
             dr_header.Values.Add("Payments of Debt");
+            dr_header.Values.Add("Dividends Paid");
 
             //Add each value
             foreach (FinancialStatement fs in StatementsArranged)
@@ -510,6 +511,16 @@ namespace Xbrl.FinancialStatement
                 if (fs.PaymentsOfDebt.HasValue)
                 {
                     dr.Values.Add(fs.PaymentsOfDebt.Value.ToString("#,##0"));
+                }
+                else
+                {
+                    dr.Values.Add("-");
+                }
+            
+                //Dividends Paid
+                if (fs.DividendsPaid.HasValue)
+                {
+                    dr.Values.Add(fs.DividendsPaid.Value.ToString("#,##0"));
                 }
                 else
                 {
