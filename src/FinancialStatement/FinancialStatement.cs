@@ -7,7 +7,6 @@ namespace Xbrl.FinancialStatement
             //General data
             public DateTime? PeriodStart { get; set; }
             public DateTime? PeriodEnd { get; set; }
-            public bool InaccuracyRiskFlag {get; set;}
 
             //Income Statement Items
             public float? Revenue { get; set; }
@@ -33,10 +32,5 @@ namespace Xbrl.FinancialStatement
             public float? FinancingCashFlows {get; set;}
             public float? ProceedsFromIssuanceOfDebt {get; set;}
             public float? PaymentsOfDebt {get; set;}
-
-            public FinancialStatement()
-            {
-                InaccuracyRiskFlag = false;
-            }
         }
 }

@@ -10,12 +10,6 @@ namespace Xbrl.FinancialStatement
             FinancialStatement ToReturn = new FinancialStatement();      
 
             #region "Contextual (misc) info"
-            //Inaccuracy Flag
-            if (doc.PrimaryPeriodContextIdInaccuracyRiskFlag == true)
-            {
-                ToReturn.InaccuracyRiskFlag = true;
-            }
-
 
             //Period start
             try
