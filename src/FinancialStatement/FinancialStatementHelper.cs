@@ -1,6 +1,7 @@
 using System;
 using Xbrl.Helpers;
 using TimHanewich.Csv;
+using System.Collections.Generic;
 
 namespace Xbrl.FinancialStatement
 {
@@ -257,6 +258,25 @@ namespace Xbrl.FinancialStatement
 
             #endregion
         
+            //Arrange the statements from oldest to newest
+            List<FinancialStatement> ToPullFrom = new List<FinancialStatement>();
+            List<FinancialStatement> StatementsArranged = new List<FinancialStatement>();
+            ToPullFrom.AddRange(statements);
+            while (ToPullFrom.Count > 0)
+            {
+                FinancialStatement Winner = ToPullFrom[0];
+                foreach (FinancialStatement fs in ToPullFrom)
+                {
+                    if (fs.PeriodEnd < Winner.PeriodEnd)
+                    {
+                        Winner = fs;
+                    }
+                }
+                StatementsArranged.Add(Winner);
+                ToPullFrom.Remove(Winner);
+            }
+
+
             CsvFile csv = new CsvFile();
 
             //Headers
@@ -283,7 +303,7 @@ namespace Xbrl.FinancialStatement
             dr_header.Values.Add("Payments of Debt");
 
             //Add each value
-            foreach (FinancialStatement fs in statements)
+            foreach (FinancialStatement fs in StatementsArranged)
             {
                 DataRow dr = csv.AddNewRow();
 
