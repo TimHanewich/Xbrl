@@ -242,7 +242,7 @@ namespace Xbrl.FinancialStatement
             //Dividends paid
             try
             {
-                ToReturn.DividendsPaid = doc.GetValueFromPriorities("PaymentsOfDividendsCommonStock").Value;
+                ToReturn.DividendsPaid = doc.GetValueFromPriorities("PaymentsOfDividendsCommonStock", "PaymentsOfDividends").Value;
             }
             catch
             {
