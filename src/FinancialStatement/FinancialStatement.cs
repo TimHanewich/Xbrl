@@ -8,7 +8,6 @@ namespace Xbrl.FinancialStatement
             public DateTime? PeriodStart { get; set; }
             public DateTime? PeriodEnd { get; set; }
             public bool InaccuracyRiskFlag {get; set;}
-            public DateTime FinancialStatementGeneratedAtUtc { get; set; }
 
             //Income Statement Items
             public float? Revenue { get; set; }

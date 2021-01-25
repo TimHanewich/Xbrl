@@ -7,9 +7,7 @@ namespace Xbrl.FinancialStatement
     {
         public static FinancialStatement CreateFinancialStatement(this XbrlInstanceDocument doc)
         {
-            FinancialStatement ToReturn = new FinancialStatement();
-            ToReturn.FinancialStatementGeneratedAtUtc = DateTime.UtcNow;          
-
+            FinancialStatement ToReturn = new FinancialStatement();      
 
             #region "Contextual (misc) info"
             //Inaccuracy Flag
