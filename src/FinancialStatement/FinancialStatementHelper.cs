@@ -239,7 +239,15 @@ namespace Xbrl.FinancialStatement
                 ToReturn.PaymentsOfDebt = null;
             }
             
-            
+            //Dividends paid
+            try
+            {
+                ToReturn.DividendsPaid = doc.GetValueFromPriorities("PaymentsOfDividendsCommonStock").Value;
+            }
+            catch
+            {
+                ToReturn.DividendsPaid = null;
+            }
             
             #endregion
             
