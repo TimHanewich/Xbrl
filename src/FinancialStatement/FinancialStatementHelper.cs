@@ -61,7 +61,7 @@ namespace Xbrl.FinancialStatement
             //Operating Income
             try
             {
-                ToReturn.OperatingIncome = doc.GetValueFromPriorities("OperatingIncomeLoss").Value;
+                ToReturn.OperatingIncome = doc.GetValueFromPriorities("OperatingIncomeLoss", "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest").Value;
             }
             catch
             {
