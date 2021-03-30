@@ -378,6 +378,9 @@ namespace Xbrl
             throw new Exception("Unable to find fact with ID '" + id + "'.");
         }
 
+        /// <summary>
+        /// Finds the primary period context for the specified document type. For example, if the document is a 10-Q, finds the primary ~90 day context.
+        /// </summary>
         public XbrlContext FindNormalPeriodPrimaryContext()
         {
             //First, check if the primary period timespan already matches the document period type (i.e. if this document is a 10-Q and indeed the primary period they specified in the document is 90 days, or 3 months)
