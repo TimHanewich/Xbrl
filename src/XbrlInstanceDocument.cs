@@ -242,6 +242,7 @@ namespace Xbrl
 
             #region "Get Document Type"
 
+            sr = new StreamReader(s); //Refresh the stream reader
             s.Position = 0;
             do
             {
@@ -266,8 +267,6 @@ namespace Xbrl
                         ToReturn.DocumentType = Focus.Substring(loc1 + 1, loc2 - loc1 - 1);
                     }
                 }
-
-
             } while (sr.EndOfStream == false);
 
             #endregion
