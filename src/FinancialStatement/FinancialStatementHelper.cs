@@ -16,9 +16,9 @@ namespace Xbrl.FinancialStatement
             //Period start
             try
             {
-                XbrlContext con = doc.GetContextById(doc.PrimaryPeriodContextId);
-                ToReturn.PeriodStart = con.StartDate;
-                ToReturn.PeriodEnd = con.EndDate;
+                XbrlContext found = doc.FindNormalPeriodPrimaryContext();
+                ToReturn.PeriodStart = found.StartDate;
+                ToReturn.PeriodEnd = found.EndDate;
             }
             catch
             {
