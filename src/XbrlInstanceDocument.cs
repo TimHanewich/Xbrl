@@ -378,5 +378,132 @@ namespace Xbrl
             throw new Exception("Unable to find fact with ID '" + id + "'.");
         }
 
+        public XbrlContext FindNormalPeriodPrimaryContext()
+        {
+            //First, check if the primary period timespan already matches the document period type (i.e. if this document is a 10-Q and indeed the primary period they specified in the document is 90 days, or 3 months)
+            bool AlreadyMatches = false;
+            XbrlContext pricontext = GetContextById(PrimaryPeriodContextId);
+            TimeSpan prispan = pricontext.EndDate - pricontext.StartDate;
+            string strippeddoctype = DocumentType.ToLower().Replace("-", "");
+            if (strippeddoctype == "10q")
+            {
+                if (prispan.TotalDays > 80 && prispan.TotalDays < 100) //Roughly 3 months
+                {
+                    AlreadyMatches = true;
+                }
+            }
+            else if (strippeddoctype == "10k")
+            {
+                if (prispan.TotalDays > 350 && prispan.TotalDays < 380)
+                {
+                    AlreadyMatches = true;
+                }
+            }
+            else
+            {
+                throw new Exception("Unable to recognize document type (not identified as a 10-K or a 10-Q).");
+            }
+            if (AlreadyMatches)
+            {
+                return pricontext;
+            }
+        
+            //Now that it does not match, we need to find the most popular one that DOES match.
+            ContextUseCount[] usecounts = CountContextUses();
+            int lowerbound = 0;
+            int upperbound = 0;
+            if (strippeddoctype == "10q")
+            {
+                lowerbound = 80;
+                upperbound = 100;
+            }
+            else if (strippeddoctype == "10k")
+            {
+                lowerbound = 360;
+                upperbound = 380;
+            }
+            else
+            {
+                throw new Exception("Unable to recognize document type (not identified as a 10-K or a 10-Q).");
+            }
+
+            //Find it
+            XbrlContext ToReturn = null;
+            foreach (ContextUseCount cuc in usecounts)
+            {
+                if (ToReturn == null) //Only replace if it is null (this is here to prevent this being replaced later down)
+                {
+                    TimeSpan thistimespan = cuc.Context.EndDate - cuc.Context.StartDate;
+                    if (thistimespan.TotalDays > lowerbound && thistimespan.TotalDays < upperbound)
+                    {
+                        ToReturn = cuc.Context;
+                    }
+                }
+            }
+
+            //Check for error
+            if (ToReturn == null)
+            {
+                throw new Exception("Unable to find normal period Context appropriate for this document.");
+            }
+
+            return ToReturn;
+        }
+
+
+        #region "Utility"
+
+        private ContextUseCount[] CountContextUses()
+        {
+           List<ContextUseCount> ToReturn = new List<ContextUseCount>();
+
+           //Count them up
+           foreach (XbrlContext context in Contexts)
+           {
+               ContextUseCount cuc = new ContextUseCount();
+               cuc.Context = context;
+               cuc.Count = 0;
+
+               foreach (XbrlFact fact in Facts)
+               {
+                   if (fact.ContextId == context.Id)
+                   {
+                       cuc.Count = cuc.Count + 1;
+                   }
+               }
+
+               ToReturn.Add(cuc);
+           }
+
+           //Arrange from highest to lowest
+           List<ContextUseCount> Arranged = new List<ContextUseCount>();
+           while (ToReturn.Count > 0)
+           {
+               ContextUseCount winner = ToReturn[0];
+               foreach (ContextUseCount cuc in ToReturn)
+               {
+                   if (cuc.Count > winner.Count)
+                   {
+                       winner = cuc;
+                   }
+               }
+               Arranged.Add(winner);
+               ToReturn.Remove(winner);
+           }
+           ToReturn = Arranged;
+
+           return ToReturn.ToArray();
+        }
+        
+        private class ContextUseCount
+        {
+            public XbrlContext Context {get; set;}
+            public int Count {get; set;}
+        }
+
+
+        #endregion
+        
+
     }
 }
