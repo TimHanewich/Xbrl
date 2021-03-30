@@ -14,13 +14,9 @@ namespace Xbrl
         public string PrimaryPeriodContextId { get; set; }
         public string PrimaryInstantContextId { get; set; }
 
-        //Risks
-        public bool PrimaryPeriodContextIdInaccuracyRiskFlag {get; set;}
-
         public static XbrlInstanceDocument Create(Stream s)
         {
             XbrlInstanceDocument ToReturn = new XbrlInstanceDocument();
-            ToReturn.PrimaryPeriodContextIdInaccuracyRiskFlag = false;
 
             StreamReader sr = new StreamReader(s);
             int loc1 = 0;
@@ -300,96 +296,6 @@ namespace Xbrl
 
 
             } while (sr.EndOfStream == false);
-
-
-            #region "If this is a 10-Q document and the primary context we found above is not apprxoimately 90 days, then search for the correct one."
-
-            if (ToReturn.DocumentType.ToLower() == "10-q")
-            {
-                if (ToReturn.PrimaryPeriodContextId != null)
-                {
-                    if (ToReturn.PrimaryPeriodContextId != "")
-                    {
-                        XbrlContext con = ToReturn.GetContextById(ToReturn.PrimaryPeriodContextId);
-                        {
-                            if (con != null)
-                            {
-                                int days = (con.EndDate - con.StartDate).Days;
-                                if (days > 100) //This should be 90 (a 3 month period, a quarter), but we will make it 100 as a buffer
-                                {
-                                    
-                                    //Raise the flag
-                                    ToReturn.PrimaryPeriodContextIdInaccuracyRiskFlag = true;
-
-                                    //The below code was going to try and find the "correct" context reference.  I disabled it because it didn't work! At least for the Microsoft Q3 FY2020 XBRL document it didn't work.
-                                    
-                                    // //Get a list of Context references that are in the 90 day time frame (ish) and have an end date of the one specified as the primary time
-                                    // List<XbrlContext> EligibleContexts = new List<XbrlContext>();
-                                    // foreach (XbrlContext context in ToReturn.Contexts)
-                                    // {
-                                    //     if (context.EndDate == ToReturn.GetContextById(ToReturn.PrimaryPeriodContextId).EndDate) //It ends on the same day
-                                    //     {
-                                    //         int this_days = (context.EndDate - context.StartDate).Days;
-                                    //         if (this_days > 80 && this_days < 100)
-                                    //         {
-                                    //             EligibleContexts.Add(context);
-                                    //         }
-                                    //     }
-                                    // }
-
-                                    // //Arrange via popularity (how many times each are used)
-                                    // List<XbrlContext> ArrangedByPopularity = new List<XbrlContext>();
-                                    // do
-                                    // {
-                                    //     XbrlContext winner = EligibleContexts[0];
-
-                                    //     foreach (XbrlContext context in EligibleContexts)
-                                    //     {
-                                    //         //Get number of times this appears
-                                    //         int this_count = 0;
-                                    //         foreach (XbrlFact fact in ToReturn.Facts)
-                                    //         {
-                                    //             if (fact.ContextId == context.Id)
-                                    //             {
-                                    //                 this_count = this_count + 1;
-                                    //             }
-                                    //         }
-
-                                    //         //Get number of times the winner appears
-                                    //         int winner_count = 0;
-                                    //         foreach (XbrlFact fact in ToReturn.Facts)
-                                    //         {
-                                    //             if (fact.ContextId == winner.Id)
-                                    //             {
-                                    //                 winner_count = winner_count + 1;
-                                    //             }
-                                    //         }
-                                    //     }
-
-                                    //     EligibleContexts.Remove(winner);
-                                    //     ArrangedByPopularity.Add(winner);
-
-                                    // } while (EligibleContexts.Count > 0);
-
-
-                                    
-
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                ToReturn.PrimaryPeriodContextIdInaccuracyRiskFlag = false;
-            }
-
-            
-            #endregion
-
 
             #endregion
 
