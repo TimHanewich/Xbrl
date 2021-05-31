@@ -5,10 +5,10 @@ namespace Xbrl.Helpers
 {
     public static class XbrlInstanceDocumentHelper
     {
-        public static XbrlFact GetValueFromPriorities(this XbrlInstanceDocument doc, params string[] priorities)
+        public static XbrlFact GetValueFromPriorities(this XbrlInstanceDocument doc, string context_id, params string[] priorities)
         {
             //First get the normal period context
-            string normal_period_context = doc.FindNormalPeriodPrimaryContext().Id;
+            string normal_period_context = context_id;
 
             foreach (string word in priorities)
             {
@@ -25,6 +25,13 @@ namespace Xbrl.Helpers
             }
 
             throw new Exception("Unable to find XBRL fact for value labeled with any of the following: " + priorities);
+        }
+
+        public static XbrlFact GetValueFromPriorities(this XbrlInstanceDocument doc, params string[] priorities)
+        {
+            //First get the normal period context
+            string normal_period_context = doc.FindNormalPeriodPrimaryContext().Id;
+            return doc.GetValueFromPriorities(normal_period_context, priorities);            
         }
     }
 }
