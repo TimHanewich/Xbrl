@@ -185,11 +185,11 @@ namespace Xbrl
                                 //This try bracket is in here because some XBRL files have more than just values in them (this is an error)... for example, XOM's 2017 filing
                                 try
                                 {
-                                    fact.Value = Convert.ToSingle(valstr);
+                                    fact.Value = valstr;
                                 }
                                 catch
                                 {
-                                    fact.Value = 0;
+                                    fact.Value = null;
                                 }
                             }                            
                         }
