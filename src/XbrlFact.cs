@@ -35,5 +35,17 @@ namespace Xbrl
                 throw new Exception("Unable to convert value '" + Value + "' into a DateTime.");
             }
         }
+    
+        public long ValueAsLong()
+        {
+            try
+            {
+                return Convert.ToInt64(Value);
+            }
+            catch
+            {
+                throw new Exception("Unable to convert value '" + Value + " to long.");
+            }
+        }
     }
 }
