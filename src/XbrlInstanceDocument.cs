@@ -205,7 +205,6 @@ namespace Xbrl
             #endregion
 
             
-
             #region "Get Trading Symbol"
             bool TradingSymbolAlreadySet = false; //This is here
             s.Position = 0;
@@ -348,8 +347,6 @@ namespace Xbrl
             }
             #endregion
 
-
-
             return ToReturn;
         }
 
@@ -451,7 +448,6 @@ namespace Xbrl
 
             return ToReturn;
         }
-
 
         #region "Utility"
 
