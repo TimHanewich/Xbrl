@@ -111,7 +111,7 @@ namespace Xbrl
                     }
 
                     //If this is indeed a fact (it appears to have all of the parts), get data from it
-                    if (FactData.Contains("contextRef") && FactData.Contains("unitRef"))
+                    if (FactData.Contains("contextRef"))
                     {
                         XbrlFact fact = new XbrlFact();
 
