@@ -432,7 +432,7 @@ namespace Xbrl
             }
             else if (strippeddoctype == "10k")
             {
-                lowerbound = 360;
+                lowerbound = 350;
                 upperbound = 380;
             }
             else
