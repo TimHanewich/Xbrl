@@ -448,6 +448,30 @@ namespace Xbrl
             return ToReturn;
         }
 
+        public DateTime? DocumentPeriodEndDate
+        {
+            get
+            {
+                foreach (XbrlFact fact in Facts)
+                {
+                    if (fact.NamespaceId.ToLower() == "dei" && fact.Label.ToLower() == "documentperiodenddate")
+                    {
+                        try
+                        {
+                            return fact.ValueAsDateTime();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Failure while returning value: " + ex.Message);
+                        }
+                    }
+                }
+
+                //If it gets this far, it didnt find it, so return null;
+                return null;
+            }
+        }
+
         #region "Utility"
 
         private ContextUseCount[] CountContextUses()
