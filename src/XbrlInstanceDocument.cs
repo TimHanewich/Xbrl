@@ -95,9 +95,8 @@ namespace Xbrl
                 string line = sr.ReadLine().Trim();
 
 
-                if (line.Contains("<") && line.Contains(":") && line.Contains("<context") == false && line.Contains("<xbrli:context") == false && line.Contains("DocumentType") == false && line.Contains("<dei:TradingSymbol") == false && line.Contains("<!--") == false)
+                if (line.Contains("<") && line.Contains(":") && line.Contains("<context") == false && line.Contains("<xbrli:context") == false && line.Contains("<!--") == false)
                 {
-
 
                     string FactData = line;
 
