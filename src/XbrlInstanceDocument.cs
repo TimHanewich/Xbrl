@@ -406,8 +406,11 @@ namespace Xbrl
                 return pricontext;
             }
         
-            //Now that it does not match, we need to find the most popular one that DOES match.
+            //Count
             ContextUseCount[] usecounts = CountContextUses();
+
+            //Now that it does not match, we need to find the most popular one that DOES match.
+            //Find it
             int lowerbound = 0;
             int upperbound = 0;
             if (strippeddoctype == "10q")
@@ -424,8 +427,6 @@ namespace Xbrl
             {
                 throw new Exception("Unable to recognize document type (not identified as a 10-K or a 10-Q).");
             }
-
-            //Find it
             XbrlContext ToReturn = null;
             foreach (ContextUseCount cuc in usecounts)
             {
