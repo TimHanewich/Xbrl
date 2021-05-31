@@ -409,8 +409,7 @@ namespace Xbrl
             //Count
             ContextUseCount[] usecounts = CountContextUses();
 
-            //Now that it does not match, we need to find the most popular one that DOES match.
-            //Find it
+            //Establish period bounds (i.e. quarterly is ~90, annual is ~360)
             int lowerbound = 0;
             int upperbound = 0;
             if (strippeddoctype == "10q")
@@ -427,6 +426,29 @@ namespace Xbrl
             {
                 throw new Exception("Unable to recognize document type (not identified as a 10-K or a 10-Q).");
             }
+            
+
+            //If a DocumentPeriodEndDate property is available for this doc (it should be), try to get
+            //The proper period context that (i.e. 90 days, 360 days)
+            //ends on that date
+            //and is the most popular to meet the above criteria
+            if (DocumentPeriodEndDate.HasValue)
+            {
+                foreach (ContextUseCount cuc in usecounts)
+                {
+                    if (cuc.Context.EndDate.ToShortDateString() == DocumentPeriodEndDate.Value.ToShortDateString()) //The end date of this period falls on the document's specified end date (what we want)
+                    {
+                        TimeSpan period_duration = cuc.Context.EndDate - cuc.Context.StartDate;
+                        int period_days = period_duration.Days;
+                        if (period_days > lowerbound && period_days < upperbound) //If it is in the range that is correct for this period
+                        {
+                            return cuc.Context;
+                        }
+                    } 
+                }
+            } 
+
+            //Now that it does not match, we need to find the most popular one that DOES match.
             XbrlContext ToReturn = null;
             foreach (ContextUseCount cuc in usecounts)
             {
