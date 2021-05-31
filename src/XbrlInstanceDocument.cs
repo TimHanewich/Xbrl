@@ -115,18 +115,23 @@ namespace Xbrl
                     {
                         XbrlFact fact = new XbrlFact();
 
-                        //get the namspace
-                        loc1 = FactData.IndexOf("<");
-                        loc2 = FactData.IndexOf(":");
-                        fact.NamespaceId = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                        //Track back from the "contextRef" because we know the contextRef tag is inside the fact itself
+                        int last_contextRef = FactData.LastIndexOf("contextRef");
 
+                        //Get the fact opening (tracked back from the last context ref)
+                        int fact_open = FactData.LastIndexOf("<", last_contextRef);
+
+                        //get the namspace
+                        loc2 = FactData.IndexOf(":", fact_open);
+                        fact.NamespaceId = FactData.Substring(fact_open + 1, loc2 - fact_open - 1);
+                        
                         //Get the label
-                        loc1 = FactData.IndexOf(":");
-                        loc2 = FactData.IndexOf(" ");
+                        loc1 = FactData.IndexOf(":", fact_open);
+                        loc2 = FactData.IndexOf(" ", loc1 + 1);
                         fact.Label = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
 
                         //Get decimals
-                        loc1 = FactData.IndexOf("decimals=");
+                        loc1 = FactData.IndexOf("decimals=", fact_open);
                         if (loc1 != -1)
                         {
                             loc1 = FactData.IndexOf("\"", loc1 + 1);
@@ -145,9 +150,8 @@ namespace Xbrl
                             }
                         }
 
-
                         //Get id
-                        loc1 = FactData.IndexOf("id=");
+                        loc1 = FactData.IndexOf("id=", fact_open);
                         loc1 = FactData.IndexOf("\"", loc1 + 1);
                         loc2 = FactData.IndexOf("\"", loc1 + 1);
                         if (loc1 != -1 && loc2 != -1)
@@ -156,7 +160,7 @@ namespace Xbrl
                         }
 
                         //Get unit ref
-                        loc1 = FactData.IndexOf("unitRef=");
+                        loc1 = FactData.IndexOf("unitRef=", fact_open);
                         loc1 = FactData.IndexOf("\"", loc1 + 1);
                         loc2 = FactData.IndexOf("\"", loc1 + 1);
                         if (loc1 != -1 && loc2 != -1)
@@ -165,7 +169,7 @@ namespace Xbrl
                         }
 
                         //Get context ref
-                        loc1 = FactData.IndexOf("contextRef=");
+                        loc1 = FactData.IndexOf("contextRef=", fact_open);
                         loc1 = FactData.IndexOf("\"", loc1 + 1);
                         loc2 = FactData.IndexOf("\"", loc1 + 1);
                         if (loc1 != -1 && loc2 != -1)
@@ -176,24 +180,33 @@ namespace Xbrl
                         //Get the value
                         if (FactData.Contains("/>") == false)
                         {
-                            loc1 = FactData.IndexOf(">");
+                            loc1 = FactData.IndexOf(">", fact_open);
                             loc2 = FactData.IndexOf("<", loc1 + 1);
-                            string valstr = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
-                            if (valstr != "")
+                            if (loc1 != -1 && loc2 != -1 && loc2 > loc1)
                             {
-                                //This try bracket is in here because some XBRL files have more than just values in them (this is an error)... for example, XOM's 2017 filing
-                                try
+                                string valstr = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                                if (valstr != "")
                                 {
-                                    fact.Value = valstr;
-                                }
-                                catch
-                                {
-                                    fact.Value = null;
-                                }
-                            }                            
+                                    //This try bracket is in here because some XBRL files have more than just values in them (this is an error)... for example, XOM's 2017 filing
+                                    try
+                                    {
+                                        fact.Value = valstr;
+                                    }
+                                    catch
+                                    {
+                                        fact.Value = null;
+                                    }
+                                }  
+                            }
+                            else
+                            {
+                                fact.Value = null;
+                            }                      
                         }
-
-
+                        else
+                        {
+                            fact.Value = null;
+                        }
 
                         Facts.Add(fact);
                     }
@@ -544,7 +557,6 @@ namespace Xbrl
             public XbrlContext Context {get; set;}
             public int Count {get; set;}
         }
-
 
         #endregion
         
