@@ -187,7 +187,7 @@ namespace Xbrl.FinancialStatement
             //Operating Cash Flows
             try
             {
-                ToReturn.OperatingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations").ValueAsFloat();
+                ToReturn.OperatingCashFlows = doc.GetValueFromPriorities(focus_context.Id, "NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations").ValueAsFloat();
             }
             catch
             {
@@ -197,7 +197,7 @@ namespace Xbrl.FinancialStatement
             //Investing Cash Flows
             try
             {
-                ToReturn.InvestingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations").ValueAsFloat();
+                ToReturn.InvestingCashFlows = doc.GetValueFromPriorities(focus_context.Id, "NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations").ValueAsFloat();
             }
             catch
             {
@@ -207,7 +207,7 @@ namespace Xbrl.FinancialStatement
             //Finance cash flows
             try
             {
-                ToReturn.FinancingCashFlows = doc.GetValueFromPriorities("NetCashProvidedByUsedInFinancingActivities", "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations").ValueAsFloat();
+                ToReturn.FinancingCashFlows = doc.GetValueFromPriorities(focus_context.Id, "NetCashProvidedByUsedInFinancingActivities", "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations").ValueAsFloat();
             }
             catch
             {
@@ -217,7 +217,7 @@ namespace Xbrl.FinancialStatement
             //ProceedsFromIssuanceOfDebt
             try
             {
-                ToReturn.ProceedsFromIssuanceOfDebt = doc.GetValueFromPriorities("ProceedsFromIssuanceOfDebt", "ProceedsFromDebtMaturingInMoreThanThreeMonths", "ProceedsFromIssuanceOfLongTermDebt", "ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet").ValueAsFloat();
+                ToReturn.ProceedsFromIssuanceOfDebt = doc.GetValueFromPriorities(focus_context.Id, "ProceedsFromIssuanceOfDebt", "ProceedsFromDebtMaturingInMoreThanThreeMonths", "ProceedsFromIssuanceOfLongTermDebt", "ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet").ValueAsFloat();
             }
             catch
             {
@@ -227,7 +227,7 @@ namespace Xbrl.FinancialStatement
             //Payments of debt
             try
             {
-                ToReturn.PaymentsOfDebt = doc.GetValueFromPriorities("RepaymentsOfDebt", "RepaymentsOfDebtMaturingInMoreThanThreeMonths", "RepaymentsOfLongTermDebt", "RepaymentsOfLongTermDebtAndCapitalSecurities").ValueAsFloat();
+                ToReturn.PaymentsOfDebt = doc.GetValueFromPriorities(focus_context.Id, "RepaymentsOfDebt", "RepaymentsOfDebtMaturingInMoreThanThreeMonths", "RepaymentsOfLongTermDebt", "RepaymentsOfLongTermDebtAndCapitalSecurities").ValueAsFloat();
             }
             catch
             {
@@ -237,7 +237,7 @@ namespace Xbrl.FinancialStatement
             //Dividends paid
             try
             {
-                ToReturn.DividendsPaid = doc.GetValueFromPriorities("PaymentsOfDividendsCommonStock", "PaymentsOfDividends").ValueAsFloat();
+                ToReturn.DividendsPaid = doc.GetValueFromPriorities(focus_context.Id, "PaymentsOfDividendsCommonStock", "PaymentsOfDividends").ValueAsFloat();
             }
             catch
             {
