@@ -227,13 +227,13 @@ namespace Xbrl
                 if (line.Contains("<dei:TradingSymbol"))
                 {
                     string focus = line;
-                    if (focus.Contains("</dei:TradingSymbol") == false)
+                    if (focus.Contains("</dei:TradingSymbol") == false && focus.Contains("/>") == false)
                     {
                         do
                         {
                             string nl = sr.ReadLine();
                             focus = focus + " " + nl;
-                        } while (focus.Contains("</dei:TradingSymbol") == false);
+                        } while (focus.Contains("</dei:TradingSymbol") == false && focus.Contains("/>") == false);
                     }
                     loc1 = focus.IndexOf("TradingSymbol");
                     loc1 = focus.IndexOf(">", loc1 + 1);
