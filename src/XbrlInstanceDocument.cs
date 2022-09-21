@@ -396,14 +396,14 @@ namespace Xbrl
             XbrlContext pricontext = GetContextById(PrimaryPeriodContextId);
             TimeSpan prispan = pricontext.EndDate - pricontext.StartDate;
             string strippeddoctype = DocumentType.ToLower().Replace("-", "");
-            if (strippeddoctype == "10q")
+            if (strippeddoctype.StartsWith("10q"))
             {
                 if (prispan.TotalDays > 80 && prispan.TotalDays < 100) //Roughly 3 months
                 {
                     AlreadyMatches = true;
                 }
             }
-            else if (strippeddoctype == "10k")
+            else if (strippeddoctype.StartsWith("10k"))
             {
                 if (prispan.TotalDays > 350 && prispan.TotalDays < 380)
                 {
@@ -425,12 +425,12 @@ namespace Xbrl
             //Establish period bounds (i.e. quarterly is ~90, annual is ~360)
             int lowerbound = 0;
             int upperbound = 0;
-            if (strippeddoctype == "10q")
+            if (strippeddoctype.StartsWith("10q"))
             {
                 lowerbound = 80;
                 upperbound = 100;
             }
-            else if (strippeddoctype == "10k")
+            else if (strippeddoctype.StartsWith("10k"))
             {
                 lowerbound = 350;
                 upperbound = 380;
