@@ -24,7 +24,12 @@ namespace Xbrl
             XmlDocument doc = new XmlDocument();
             //Handle namespace URI
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            //Load XML document from stream text
+            
+            //Store expected XBRL xml string and check if stream text is empty and return if null
+            string srXml = sr.ReadToEnd();
+            if (srXml == "")
+                return null;
+
             doc.LoadXml(sr.ReadToEnd());
             //Gather document namespace elements for resolution in xPath search
             foreach (XmlAttribute a in doc.DocumentElement.Attributes)
