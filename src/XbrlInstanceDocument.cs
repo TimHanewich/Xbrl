@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Xml;
 using System.Collections.Generic;
 
 namespace Xbrl
@@ -17,113 +16,297 @@ namespace Xbrl
 
         public static XbrlInstanceDocument Create(Stream s)
         {
-            
-            StreamReader reader = new StreamReader(s);
-            XmlDocument doc = new XmlDocument();
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            doc.LoadXml(reader.ReadToEnd());
-            foreach (XmlAttribute a in doc.DocumentElement.Attributes)
-            {
-                if (a.Name == "xmlns")
-                    nsmgr.AddNamespace("xbrl", a.Value);
-                else
-                {
-                    Console.WriteLine(a.Name.Split(':')[1]);
-                    nsmgr.AddNamespace(a.Name.Split(':')[1], a.Value);
-                }
-
-            }
-            XmlNode root = doc.DocumentElement;
-
-            #region "Get Contexts"
-
-            List<XbrlContext> Contexts = new List<XbrlContext>();
-            XmlNodeList contexts = root.SelectNodes("descendant::xbrl:context",nsmgr);
-
-            foreach (XmlNode context in contexts)
-            {
-                XbrlContext xbrlContext = new XbrlContext();
-                foreach(XmlNode contextEntityPeriod in context.ChildNodes)
-                {
-                    if (contextEntityPeriod.Name == "period")
-                    {
-                        if (contextEntityPeriod.FirstChild.Name == "startDate")
-                        {
-                            xbrlContext.StartDate = DateTime.Parse(contextEntityPeriod.FirstChild.InnerText);
-                            xbrlContext.EndDate = DateTime.Parse(contextEntityPeriod.LastChild.InnerText);
-                        }
-                        else if (contextEntityPeriod.FirstChild.Name == "instant")
-                        {
-                            xbrlContext.TimeType = XbrlTimeType.Instant;
-                            xbrlContext.InstantDate = DateTime.Parse(contextEntityPeriod.FirstChild.InnerText);
-                        }
-                    } else if(contextEntityPeriod.Name == "entity")
-                    {
-
-                        xbrlContext.Id = context.Attributes[0].Value;
-                    }
-                }
-                Contexts.Add(xbrlContext);
-            }
-
             XbrlInstanceDocument ToReturn = new XbrlInstanceDocument();
 
             StreamReader sr = new StreamReader(s);
             int loc1 = 0;
             int loc2 = 0;
             
+
+            #region "Get Contexts"
+            s.Position = 0;
+            List<XbrlContext> Contexts = new List<XbrlContext>();
+            do
+            {
+                string line = sr.ReadLine();
+
+                if (line.Contains("<context") || line.Contains("<xbrli:context"))
+                {
+                    XbrlContext con = new XbrlContext();
+                    loc1 = line.IndexOf("id");
+                    loc1 = line.IndexOf("\"", loc1 + 1);
+                    loc2 = line.IndexOf("\"", loc1 + 1);
+                    con.Id = line.Substring(loc1 + 1, loc2 - loc1 - 1).Trim();
+
+                    do
+                    {
+                        string nl = sr.ReadLine().Trim();
+
+
+                        if (nl.Contains("startDate"))
+                        {
+                            loc1 = nl.IndexOf("startDate");
+                            loc1 = nl.IndexOf(">", loc1 + 1);
+                            loc2 = nl.IndexOf("<", loc1 + 1);
+                            con.StartDate = DateTime.Parse(nl.Substring(loc1 + 1, loc2 - loc1 - 1));
+                            con.TimeType = XbrlTimeType.Period;
+                        }
+
+                        if (nl.Contains("endDate"))
+                        {
+                            loc1 = nl.IndexOf("endDate");
+                            loc1 = nl.IndexOf(">", loc1 + 1);
+                            loc2 = nl.IndexOf("<", loc1 + 1);
+                            con.EndDate = DateTime.Parse(nl.Substring(loc1 + 1, loc2 - loc1 - 1));
+                            con.TimeType = XbrlTimeType.Period;
+                        }
+
+                        if (nl.Contains("<instant>") || nl.Contains("<xbrli:instant"))
+                        {
+                            loc1 = nl.IndexOf("instant");
+                            loc1 = nl.IndexOf(">", loc1 + 1);
+                            loc2 = nl.IndexOf("<", loc1 + 1);
+                            con.InstantDate = DateTime.Parse(nl.Substring(loc1 + 1, loc2 - loc1 - 1));
+                            con.TimeType = XbrlTimeType.Instant;
+                        }
+
+                        if (nl.Contains("</context") || nl.Contains("</xbrli:context"))
+                        {
+                            break;
+                        }
+                    } while (true);
+
+                    Contexts.Add(con);
+                }
+
+
+            } while (sr.EndOfStream == false);
+
             ToReturn.Contexts = Contexts.ToArray();
 
             #endregion
 
             #region "Get Facts"
-           
+            s.Position = 0;
             List<XbrlFact> Facts = new List<XbrlFact>();
-            foreach(XmlNode node in root.ChildNodes)
+            do
             {
-                if(node.Name != "context" && node.Attributes.Count >0)
+
+                string line = sr.ReadLine().Trim();
+
+
+                if (line.Contains("<") && line.Contains(":") && line.Contains("<context") == false && line.Contains("<xbrli:context") == false && line.Contains("<!--") == false)
                 {
-                    XbrlFact fact = new XbrlFact();
-                    fact.Value = node.InnerText;
-                    fact.NamespaceId = nsmgr.LookupPrefix(node.NamespaceURI);
-                    fact.Label = node.Name.Contains(":")? node.Name.Split(':')[1] : node.Name;
-                    if (fact.Label == "TradingSymbol")
-                        ToReturn.TradingSymbol = fact.Label;
-                    else if(fact.Label =="DocumentType")
-                        ToReturn.DocumentType = fact.Value;
-                    
-                    foreach(XmlAttribute attr in node.Attributes)
+
+                    string FactData = line;
+
+                    //Get the next few lines for the remainder of the fact if it is not all on one line
+                    if (FactData.Contains("</") == false && FactData.Contains("/>") == false)
                     {
-                        if (attr.Name == "contextRef")
+                        do
                         {
-                            fact.ContextId = attr.Value;
-                            if (fact.Label == "DocumentFiscalPeriodFocus" || fact.Label == "CurrentFiscalYearEndDate")
-                                ToReturn.PrimaryPeriodContextId = fact.ContextId;
-                        }
-                            
-                        else if (attr.Name == "decimals")
+                            string nl = sr.ReadLine();
+                            FactData = FactData + " " + nl;
+                        } while (FactData.Contains("</") == false && FactData.Contains("/>") == false);
+                    }
+
+                    //If this is indeed a fact (it appears to have all of the parts), get data from it
+                    if (FactData.Contains("contextRef"))
+                    {
+                        XbrlFact fact = new XbrlFact();
+
+                        //Track back from the "contextRef" because we know the contextRef tag is inside the fact itself
+                        int last_contextRef = FactData.LastIndexOf("contextRef");
+
+                        //Get the fact opening (tracked back from the last context ref)
+                        int fact_open = FactData.LastIndexOf("<", last_contextRef);
+
+                        //get the namspace
+                        loc2 = FactData.IndexOf(":", fact_open);
+                        fact.NamespaceId = FactData.Substring(fact_open + 1, loc2 - fact_open - 1);
+                        
+                        //Get the label
+                        loc1 = FactData.IndexOf(":", fact_open);
+                        loc2 = FactData.IndexOf(" ", loc1 + 1);
+                        fact.Label = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+
+                        //Get decimals
+                        loc1 = FactData.IndexOf("decimals=", fact_open);
+                        if (loc1 != -1)
                         {
-                            int factDec;
-                            int.TryParse(attr.Value, out factDec);
-                            if (int.TryParse(attr.Value, out factDec))
+                            loc1 = FactData.IndexOf("\"", loc1 + 1);
+                            loc2 = FactData.IndexOf("\"", loc1 + 1);
+                            if (loc1 != -1 && loc2 != -1)
                             {
-                                fact.Decimals = factDec;
+                                string decstr = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                                if (decstr.ToLower() != "inf")
+                                {
+                                    fact.Decimals = Convert.ToInt32(decstr);
+                                }
+                                else
+                                {
+                                    fact.Decimals = 0;
+                                }
                             }
                         }
-                        else if (attr.Name == "id")
+
+                        //Get id
+                        loc1 = FactData.IndexOf("id=", fact_open);
+                        loc1 = FactData.IndexOf("\"", loc1 + 1);
+                        loc2 = FactData.IndexOf("\"", loc1 + 1);
+                        if (loc1 != -1 && loc2 != -1)
                         {
-                            fact.Id = attr.Value;
-                        } else if (attr.Name =="unitRef")
+                            fact.Id = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                        }
+
+                        //Get unit ref
+                        loc1 = FactData.IndexOf("unitRef=", fact_open);
+                        loc1 = FactData.IndexOf("\"", loc1 + 1);
+                        loc2 = FactData.IndexOf("\"", loc1 + 1);
+                        if (loc1 != -1 && loc2 != -1)
                         {
-                            fact.UnitId = attr.Value;
+                            fact.UnitId = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                        }
+
+                        //Get context ref
+                        loc1 = FactData.IndexOf("contextRef=", fact_open);
+                        loc1 = FactData.IndexOf("\"", loc1 + 1);
+                        loc2 = FactData.IndexOf("\"", loc1 + 1);
+                        if (loc1 != -1 && loc2 != -1)
+                        {
+                            fact.ContextId = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                        }
+
+                        //Get the value
+                        if (FactData.Contains("/>") == false)
+                        {
+                            loc1 = FactData.IndexOf(">", fact_open);
+                            loc2 = FactData.IndexOf("<", loc1 + 1);
+                            if (loc1 != -1 && loc2 != -1 && loc2 > loc1)
+                            {
+                                string valstr = FactData.Substring(loc1 + 1, loc2 - loc1 - 1);
+                                if (valstr != "")
+                                {
+                                    //This try bracket is in here because some XBRL files have more than just values in them (this is an error)... for example, XOM's 2017 filing
+                                    try
+                                    {
+                                        fact.Value = valstr;
+                                    }
+                                    catch
+                                    {
+                                        fact.Value = null;
+                                    }
+                                }  
+                            }
+                            else
+                            {
+                                fact.Value = null;
+                            }                      
+                        }
+                        else
+                        {
+                            fact.Value = null;
+                        }
+
+                        Facts.Add(fact);
+                    }
+                }
+
+            } while (sr.EndOfStream == false);
+            ToReturn.Facts = Facts.ToArray();
+            #endregion
+
+            
+            #region "Get Trading Symbol"
+            bool TradingSymbolAlreadySet = false; //This is here
+            s.Position = 0;
+            do
+            {
+                string line = sr.ReadLine();
+                //Is it the Trading Symbol?
+                if (line.Contains("<dei:TradingSymbol"))
+                {
+                    string focus = line;
+                    if (focus.Contains("</dei:TradingSymbol") == false && focus.Contains("/>") == false)
+                    {
+                        do
+                        {
+                            string nl = sr.ReadLine();
+                            focus = focus + " " + nl;
+                        } while (focus.Contains("</dei:TradingSymbol") == false && focus.Contains("/>") == false);
+                    }
+                    loc1 = focus.IndexOf("TradingSymbol");
+                    loc1 = focus.IndexOf(">", loc1 + 1);
+                    loc2 = focus.IndexOf("<", loc1 + 1);
+                    if (loc1 > 0 && loc2 > loc1)
+                    {
+                        if (TradingSymbolAlreadySet == false)
+                        {
+                            ToReturn.TradingSymbol = focus.Substring(loc1 + 1, loc2 - loc1 - 1);
+                            ToReturn.TradingSymbol = ToReturn.TradingSymbol.Replace("&#160;", "").Trim(); //I put this in because one of the 10-K's that I found (AMT, 2020 10-K) had this in it.  It is basically some HTML "Space" sign but I need to pull it out
+                            TradingSymbolAlreadySet = true;
                         }
                     }
-                    if(fact.ContextId!= null)
-                        Facts.Add(fact);
                 }
-            }
+            } while (sr.EndOfStream == false && TradingSymbolAlreadySet == false);
+            #endregion
 
-            ToReturn.Facts = Facts.ToArray();
+            #region "Get Document Type"
+
+            sr = new StreamReader(s); //Refresh the stream reader
+            s.Position = 0;
+            do
+            {
+                string line = sr.ReadLine();
+
+                //Is it the document type
+                if (line.Contains("<dei:DocumentType"))
+                {
+                    string Focus = line;
+                    if (Focus.Contains("</dei:DocumentType") == false)
+                    {
+                        do
+                        {
+                            string nl = sr.ReadLine();
+                            Focus = Focus + " " + nl;
+                        } while (Focus.Contains("</dei:DocumentType") == false);
+                    }
+                    loc1 = Focus.IndexOf(">");
+                    loc2 = Focus.IndexOf("<", loc1 + 1);
+                    if (loc1 > 0 && loc2 > loc1)
+                    {
+                        ToReturn.DocumentType = Focus.Substring(loc1 + 1, loc2 - loc1 - 1);
+                    }
+                }
+            } while (sr.EndOfStream == false);
+
+            #endregion
+
+            //This must appear BEOFRE finding the primary context instance
+            #region "Get Primary Context Period"
+
+            s.Position = 0;
+
+            do
+            {
+                string line = sr.ReadLine();
+
+                if (line.Contains("<dei:DocumentFiscalPeriodFocus") || line.Contains("<dei:CurrentFiscalYearEndDate"))
+                {
+                    string focus = line;
+                    do
+                    {
+                        focus = focus + " " + sr.ReadLine();
+                    } while (focus.Contains("contextRef=") == false);
+                    loc1 = focus.IndexOf("contextRef=");
+                    loc1 = focus.IndexOf("\"", loc1 + 1);
+                    loc2 = focus.IndexOf("\"", loc1 + 1);
+                    ToReturn.PrimaryPeriodContextId = focus.Substring(loc1 + 1, loc2 - loc1 - 1);
+                }
+
+
+            } while (sr.EndOfStream == false);
+
             #endregion
 
             //This can only occur AFTER finding the primary context period.
@@ -193,8 +376,14 @@ namespace Xbrl
 
         public XbrlFact GetFactById(string id)
         {
-            return new XbrlFact();
-           
+            foreach (XbrlFact fact in Facts)
+            {
+                if (fact.Id == id)
+                {
+                    return fact;
+                }
+            }
+            throw new Exception("Unable to find fact with ID '" + id + "'.");
         }
 
         /// <summary>
