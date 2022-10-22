@@ -96,7 +96,7 @@ namespace Xbrl
                     fact.Label = node.Name.Contains(":") ? node.Name.Split(':')[1] : node.Name;
                     //Populate instance document trading symbol and Type
                     if (fact.Label == "TradingSymbol")
-                        ToReturn.TradingSymbol = fact.Label;
+                        ToReturn.TradingSymbol = fact.Value;
                     else if (fact.Label == "DocumentType")
                         ToReturn.DocumentType = fact.Value;
 
