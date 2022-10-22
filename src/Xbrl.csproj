@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.2.0</Version>
+    <Version>5.1.1</Version>
     <Authors>Tim Hanewich</Authors>
     <PackageIcon>XbrlLogo.jpeg</PackageIcon>
     <PackageTags>xbrl</PackageTags>
@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="TimHanewich.Csv" Version="1.0.0" />
   </ItemGroup>
 
