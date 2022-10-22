@@ -17,24 +17,20 @@ namespace Xbrl
 
         public static XbrlInstanceDocument Create(Stream s)
         {
-            XbrlInstanceDocument ToReturn = new XbrlInstanceDocument();
-
-            StreamReader sr = new StreamReader(s);
-
+            
+            StreamReader reader = new StreamReader(s);
             XmlDocument doc = new XmlDocument();
-            //Handle namespace URI
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            //Load XML document from stream text
-            doc.LoadXml(sr.ReadToEnd());
-            //Gather document namespace elements for resolution in xPath search
+            doc.LoadXml(reader.ReadToEnd());
             foreach (XmlAttribute a in doc.DocumentElement.Attributes)
             {
-                //replace xmlns with xbrl as xmlns is reserved
                 if (a.Name == "xmlns")
                     nsmgr.AddNamespace("xbrl", a.Value);
                 else
+                {
+                    Console.WriteLine(a.Name.Split(':')[1]);
                     nsmgr.AddNamespace(a.Name.Split(':')[1], a.Value);
-
+                }
 
             }
             XmlNode root = doc.DocumentElement;
@@ -42,12 +38,12 @@ namespace Xbrl
             #region "Get Contexts"
 
             List<XbrlContext> Contexts = new List<XbrlContext>();
-            XmlNodeList contexts = root.SelectNodes("descendant::xbrl:context", nsmgr);
+            XmlNodeList contexts = root.SelectNodes("descendant::xbrl:context",nsmgr);
 
             foreach (XmlNode context in contexts)
             {
                 XbrlContext xbrlContext = new XbrlContext();
-                foreach (XmlNode contextEntityPeriod in context.ChildNodes)
+                foreach(XmlNode contextEntityPeriod in context.ChildNodes)
                 {
                     if (contextEntityPeriod.Name == "period")
                     {
@@ -61,8 +57,7 @@ namespace Xbrl
                             xbrlContext.TimeType = XbrlTimeType.Instant;
                             xbrlContext.InstantDate = DateTime.Parse(contextEntityPeriod.FirstChild.InnerText);
                         }
-                    }
-                    else if (contextEntityPeriod.Name == "entity")
+                    } else if(contextEntityPeriod.Name == "entity")
                     {
 
                         xbrlContext.Id = context.Attributes[0].Value;
@@ -71,40 +66,41 @@ namespace Xbrl
                 Contexts.Add(xbrlContext);
             }
 
+            XbrlInstanceDocument ToReturn = new XbrlInstanceDocument();
 
+            StreamReader sr = new StreamReader(s);
+            int loc1 = 0;
+            int loc2 = 0;
+            
             ToReturn.Contexts = Contexts.ToArray();
 
             #endregion
 
             #region "Get Facts"
-
+           
             List<XbrlFact> Facts = new List<XbrlFact>();
-            //Collect all facts provided in document
-            foreach (XmlNode node in root.ChildNodes)
+            foreach(XmlNode node in root.ChildNodes)
             {
-                //Context isn't needed again and facts should have at least two attributes for fact ID and context
-                if (node.Name != "context" && node.Attributes.Count > 0)
+                if(node.Name != "context" && node.Attributes.Count >0)
                 {
                     XbrlFact fact = new XbrlFact();
                     fact.Value = node.InnerText;
                     fact.NamespaceId = nsmgr.LookupPrefix(node.NamespaceURI);
-                    fact.Label = node.Name.Contains(":") ? node.Name.Split(':')[1] : node.Name;
-                    //Populate instance document trading symbol and Type
+                    fact.Label = node.Name.Contains(":")? node.Name.Split(':')[1] : node.Name;
                     if (fact.Label == "TradingSymbol")
                         ToReturn.TradingSymbol = fact.Label;
-                    else if (fact.Label == "DocumentType")
+                    else if(fact.Label =="DocumentType")
                         ToReturn.DocumentType = fact.Value;
-
-                    foreach (XmlAttribute attr in node.Attributes)
+                    
+                    foreach(XmlAttribute attr in node.Attributes)
                     {
-                        //Populate fact attributes
                         if (attr.Name == "contextRef")
                         {
                             fact.ContextId = attr.Value;
                             if (fact.Label == "DocumentFiscalPeriodFocus" || fact.Label == "CurrentFiscalYearEndDate")
                                 ToReturn.PrimaryPeriodContextId = fact.ContextId;
                         }
-                        //Decimals can be INF sometimes, those are defaulted to null
+                            
                         else if (attr.Name == "decimals")
                         {
                             int factDec;
@@ -117,13 +113,12 @@ namespace Xbrl
                         else if (attr.Name == "id")
                         {
                             fact.Id = attr.Value;
-                        }
-                        else if (attr.Name == "unitRef")
+                        } else if (attr.Name =="unitRef")
                         {
                             fact.UnitId = attr.Value;
                         }
                     }
-                    if (fact.ContextId != null)
+                    if(fact.ContextId!= null)
                         Facts.Add(fact);
                 }
             }
@@ -171,13 +166,13 @@ namespace Xbrl
                         }
                         ToReturn.PrimaryInstantContextId = WinningContext.Id;
                     }
-
+            
                 }
                 catch
                 {
                     ToReturn.PrimaryInstantContextId = "";
                 }
-
+                
             }
             #endregion
 
@@ -198,14 +193,8 @@ namespace Xbrl
 
         public XbrlFact GetFactById(string id)
         {
-            foreach (XbrlFact fact in Facts)
-            {
-                if (fact.Id == id)
-                {
-                    return fact;
-                }
-            }
-            throw new Exception("Unable to find fact with ID '" + id + "'.");
+            return new XbrlFact();
+           
         }
 
         /// <summary>
@@ -240,7 +229,7 @@ namespace Xbrl
             {
                 return pricontext;
             }
-
+        
             //Count
             ContextUseCount[] usecounts = CountContextUses();
 
@@ -261,7 +250,7 @@ namespace Xbrl
             {
                 throw new Exception("Unable to recognize document type (not identified as a 10-K or a 10-Q).");
             }
-
+            
 
             //If a DocumentPeriodEndDate property is available for this doc (it should be), try to get
             //The proper period context that (i.e. 90 days, 360 days)
@@ -279,9 +268,9 @@ namespace Xbrl
                         {
                             return cuc.Context;
                         }
-                    }
+                    } 
                 }
-            }
+            } 
 
             //Now that it does not match, we need to find the most popular one that DOES match.
             XbrlContext ToReturn = null;
@@ -334,54 +323,54 @@ namespace Xbrl
 
         private ContextUseCount[] CountContextUses()
         {
-            List<ContextUseCount> ToReturn = new List<ContextUseCount>();
+           List<ContextUseCount> ToReturn = new List<ContextUseCount>();
 
-            //Count them up
-            foreach (XbrlContext context in Contexts)
-            {
-                ContextUseCount cuc = new ContextUseCount();
-                cuc.Context = context;
-                cuc.Count = 0;
+           //Count them up
+           foreach (XbrlContext context in Contexts)
+           {
+               ContextUseCount cuc = new ContextUseCount();
+               cuc.Context = context;
+               cuc.Count = 0;
 
-                foreach (XbrlFact fact in Facts)
-                {
-                    if (fact.ContextId == context.Id)
-                    {
-                        cuc.Count = cuc.Count + 1;
-                    }
-                }
+               foreach (XbrlFact fact in Facts)
+               {
+                   if (fact.ContextId == context.Id)
+                   {
+                       cuc.Count = cuc.Count + 1;
+                   }
+               }
 
-                ToReturn.Add(cuc);
-            }
+               ToReturn.Add(cuc);
+           }
 
-            //Arrange from highest to lowest
-            List<ContextUseCount> Arranged = new List<ContextUseCount>();
-            while (ToReturn.Count > 0)
-            {
-                ContextUseCount winner = ToReturn[0];
-                foreach (ContextUseCount cuc in ToReturn)
-                {
-                    if (cuc.Count > winner.Count)
-                    {
-                        winner = cuc;
-                    }
-                }
-                Arranged.Add(winner);
-                ToReturn.Remove(winner);
-            }
-            ToReturn = Arranged;
+           //Arrange from highest to lowest
+           List<ContextUseCount> Arranged = new List<ContextUseCount>();
+           while (ToReturn.Count > 0)
+           {
+               ContextUseCount winner = ToReturn[0];
+               foreach (ContextUseCount cuc in ToReturn)
+               {
+                   if (cuc.Count > winner.Count)
+                   {
+                       winner = cuc;
+                   }
+               }
+               Arranged.Add(winner);
+               ToReturn.Remove(winner);
+           }
+           ToReturn = Arranged;
 
-            return ToReturn.ToArray();
+           return ToReturn.ToArray();
         }
-
+        
         private class ContextUseCount
         {
-            public XbrlContext Context { get; set; }
-            public int Count { get; set; }
+            public XbrlContext Context {get; set;}
+            public int Count {get; set;}
         }
 
         #endregion
-
+        
 
     }
 }
